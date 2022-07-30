@@ -1,0 +1,125 @@
+syntax = "proto3";
+
+package example;
+
+option go_package="test/example";
+
+message Msg {
+    // 基本类型
+    bool bol = 1;
+    string str = 2;
+    int32 in32 = 3;
+    int64 in64 = 4;
+    uint32 uin32 = 5;
+    uint64 uin64 = 6;
+    float flt32 = 7;
+    double flt64 = 8;
+    bytes byts = 9;
+    // TODO enum
+    // message
+    //Msg msg = 11;
+    // 数组
+    repeated bool bol_arr = 12;
+    repeated string str_arr = 13;
+    repeated int32 in32_arr = 14;
+    repeated int64 in64_arr = 15;
+    repeated uint32 uin32_arr = 16;
+    repeated uint64 uin64_arr = 17;
+    repeated float flt32_arr = 18;
+    repeated double flt64_arr = 19;
+    repeated bytes byts_arr = 20;
+    // TODO enum
+    //repeated Msg msg_arr = 22;
+    // map
+    map<string, bool> bol_map = 23;
+    map<string, string> string_map = 24;
+    map<string, int32> in32_map = 25;
+    map<string, int64> in64_map = 26;
+    map<string, uint32> uin32_map = 27;
+    map<string, uint64> uin64_map = 28;
+    map<string, float> flt32_map = 29;
+    map<string, double> flt64_map = 30;
+    map<string, bytes> byts_map = 31;
+    // TODO enum
+   // map<string, Msg> msg_map = 33;
+    oneof test_oneof {
+        bool oneof_bol = 101;
+    }
+}
+
+enum Typ {
+    UNKNOWN = 0;
+    TYPA = 1;
+    TYPB = 2;
+}
+
+message Example {
+    message NestedMsg {
+        string str = 1;
+    }
+    enum NestedTyp {
+        UNKNOWN = 0;
+        TYPA = 1;
+        TYPB = 2;
+    }
+    // 基本类型
+    bool bol = 1;
+    string str = 2;
+    int32 in32 = 3;
+    int64 in64 = 4;
+    uint32 uin32 = 5;
+    uint64 uin64 = 6;
+    float flt32 = 7;
+    double flt64 = 8;
+    bytes byts = 9;
+    // enum
+    Typ typ = 10;
+    // message
+    Msg msg = 11;
+    // 数组
+    repeated bool bol_arr = 12;
+    repeated string str_arr = 13;
+    repeated int32 in32_arr = 14;
+    repeated int64 in64_arr = 15;
+    repeated uint32 uin32_arr = 16;
+    repeated uint64 uin64_arr = 17;
+    repeated float flt32_arr = 18;
+    repeated double flt64_arr = 19;
+    repeated bytes byts_arr = 20;
+    // enum
+    repeated Typ typ_arr = 21;
+    repeated Msg msg_arr = 22;
+    // map
+    map<string, bool> bol_map = 23;
+    map<string, string> string_map = 24;
+    map<string, int32> in32_map = 25;
+    map<string, int64> in64_map = 26;
+    map<string, uint32> uin32_map = 27;
+    map<string, uint64> uin64_map = 28;
+    map<string, float> flt32_map = 29;
+    map<string, double> flt64_map = 30;
+    map<string, bytes> byts_map = 31;
+    // enum
+    map<string, Typ> typ_map = 32;
+    map<string, Msg> msg_map = 33;
+    // enum
+    NestedTyp nested_typ = 34;
+    // message
+    NestedMsg nested_msg = 35;
+    map<string, NestedTyp> nested_typ_map = 36;
+    map<string, NestedMsg> nested_msg_map = 37;
+    oneof test_oneof {
+        bool oneof_bol = 101;
+        string oneof_str = 102;
+        int32 oneof_in32 = 103;
+        int64 oneof_in64 = 104;
+        uint32 oneof_uin32 = 105;
+        uint64 oneof_uin64 = 106;
+        float oneof_flt32 = 107;
+        double oneof_flt64 = 108;
+        bytes oneof_byts = 109;
+        // TODO enum
+        // message
+        Msg oneof_msg = 111;
+    }
+}
