@@ -41,15 +41,16 @@ func main() {
 		StrArr:    []string{"string"},
 		TypArr:    []example.Typ{example.Typ(1), example.Typ(2)},
 		StringMap: map[string]string{"key1": "val1", "key2": "val2"},
-		TestOneof: &example.Example_OneofBol{
-			OneofBol: false,
+		TestOneof: &example.Example_OneofMsg{
+			OneofMsg: msg,
 		},
 	}
 	ret1, err := json.Marshal(e1)
 	fmt.Println(string(ret1))
 	fmt.Println(err)
 
+	var byts1 []byte = []byte(`{"str":"string","in32":32,"in64":64,"uin32":32,"uin64":64,"flt32":32.123,"flt64":64.123,"byts":"Ynl0ZXM=","typ":"TYPB","msg":{"str":"string"},"strArr":["string"],"typArr":["TYPA","TYPB"],"stringMap":{"key1":"val1","key2":"val2"},"nestedTyp":"TYPB","nestedMsg":{"str":"string"},"oneofBol":false,"unknown":{"str":"string","in32":32,"in64":64,"uin32":32,"uin64":64,"flt32":32.123,"flt64":64.123,"byts":"Ynl0ZXM="}}`)
 	var e2 *example.Example = &example.Example{}
-	json.Unmarshal(ret1, e2)
+	json.Unmarshal(byts1, e2)
 	fmt.Println(e2)
 }

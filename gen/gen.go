@@ -58,6 +58,7 @@ func (g *FastJsonpbGen) generatePackageName(protoFile *protogen.File, gf *protog
 func (g *FastJsonpbGen) generateImport(protoFile *protogen.File, gf *protogen.GeneratedFile) {
 	g.genImport("", "github.com/superjsf2010/protoc-gen-fastjsonpb/x/buffer", gf)
 	g.genImport("", "github.com/superjsf2010/protoc-gen-fastjsonpb/x/jsonparser", gf)
+	g.genImport("", "sync", gf)
 }
 
 func (g *FastJsonpbGen) genImport(name string, importPath string, gf *protogen.GeneratedFile) {
@@ -133,6 +134,8 @@ func (g *FastJsonpbGen) genMessage(message *protogen.Message, gf *protogen.Gener
 	//g.generateDebug(message, gf)
 	g.generateMarshal(message, gf)
 	g.generateUnmarshal(message, gf)
+	g.generatePool(message, gf)
+	g.generateDestructor(message, gf)
 	g.generateEmpty(message, gf)
 	// 处理内嵌message
 	for _, m := range message.Messages {
@@ -493,7 +496,7 @@ func (g *FastJsonpbGen) generateUnmarshal(message *protogen.Message, gf *protoge
 		}
 	}
 	gf.P(`default:`)
-	gf.P(`p.Parse()`)
+	gf.P(`p.PassParse()`)
 	// end switch
 	gf.P(`}`)
 	gf.P(`p.AssertSymbol(',')`)
@@ -534,7 +537,7 @@ func (g *FastJsonpbGen) valUnmarshal(gf *protogen.GeneratedFile, k protoreflect.
 	case protoreflect.BytesKind:
 		gf.P(v + ` = p.Bytes()`)
 	case protoreflect.MessageKind:
-		gf.P(v + ` = &` + typeName + `{}`)
+		gf.P(v + ` = ` + typeName + `New()`)
 		gf.P(v + `.FastUnmarshal(p)`)
 	case protoreflect.GroupKind:
 		// TODO  unspported type
@@ -578,7 +581,7 @@ func (g *FastJsonpbGen) listValUnmarshal(gf *protogen.GeneratedFile, k protorefl
 	case protoreflect.BytesKind:
 		gf.P(v + ` = append(` + v + `,p.Bytes())`)
 	case protoreflect.MessageKind:
-		gf.P(`tmp := &` + typeName + `{}`)
+		gf.P(`tmp := ` + typeName + `New()`)
 		gf.P(`tmp.FastUnmarshal(p)`)
 		gf.P(v + ` = append(` + v + `,tmp)`)
 	case protoreflect.GroupKind:
@@ -632,7 +635,7 @@ func (g *FastJsonpbGen) mapValUnmarshal(gf *protogen.GeneratedFile, k protorefle
 	case protoreflect.BytesKind:
 		gf.P(v + ` = p.Bytes()`)
 	case protoreflect.MessageKind:
-		gf.P(`tmp := &` + typeName + `{}`)
+		gf.P(`tmp := ` + typeName + `New()`)
 		gf.P(`tmp.FastUnmarshal(p)`)
 		gf.P(v + ` = tmp`)
 	case protoreflect.GroupKind:
@@ -698,6 +701,17 @@ func (g *FastJsonpbGen) generateEmpty(message *protogen.Message, gf *protogen.Ge
 	gf.P(``)
 }
 
+// 生成Pool方法
+func (g *FastJsonpbGen) generatePool(message *protogen.Message, gf *protogen.GeneratedFile) {
+	gf.P(`var ` + message.GoIdent.GoName + `Pool sync.Pool`)
+	gf.P(`func ` + message.GoIdent.GoName + `New() *` + message.GoIdent.GoName + `{`)
+	gf.P(`if v := ` + message.GoIdent.GoName + `Pool.Get();v != nil {`)
+	gf.P(`return v.(*` + message.GoIdent.GoName + `)`)
+	gf.P(`}`)
+	gf.P(`return &` + message.GoIdent.GoName + `{}`)
+	gf.P(`}`)
+}
+
 // 生成enum相关方法
 func (g *FastJsonpbGen) generateEnum(e *protogen.Enum, gf *protogen.GeneratedFile) {
 	g.generateEnumGetter(e, gf)
@@ -742,4 +756,109 @@ func (g *FastJsonpbGen) generateEnumGetter(e *protogen.Enum, gf *protogen.Genera
 	gf.P(`panic("enum ` + goName + `value do not match")`)
 	gf.P(`}`)
 	gf.P(``)
+}
+
+// 生成Reset方法
+func (g *FastJsonpbGen) generateDestructor(message *protogen.Message, gf *protogen.GeneratedFile) {
+	gf.P(`func (x *` + message.GoIdent.GoName + `) Destructor() {`)
+	gf.P(`if x == nil {`)
+	gf.P(`panic("type ` + message.GoIdent.GoName + ` is nil")`)
+	gf.P(`}`)
+	// 处理simple字段
+	for _, f := range message.Fields {
+		if f.Desc.ContainingOneof() == nil {
+			if f.Desc.IsList() {
+				g.listDestructor(gf, f)
+			} else if f.Desc.IsMap() {
+				g.mapDestructor(gf, f)
+			} else {
+				g.typeDestructor(gf, f)
+			}
+		}
+	}
+	// 处理oneof字段
+	for _, of := range message.Oneofs {
+		oneofs := make([]*protogen.Field, 0)
+		for _, osf := range of.Fields {
+			if osf.Desc.Kind() == protoreflect.MessageKind {
+				oneofs = append(oneofs, osf)
+			}
+		}
+		gf.P(`if x.` + of.GoName + ` != nil {`)
+		prefix := ``
+		for i, osf := range oneofs {
+			// oneof 不支持array map
+			if i == 0 {
+				prefix = `if _, ok := x.Get` + of.GoName + `().`
+			} else {
+				prefix = `} else if _, ok := x.Get` + of.GoName + `().`
+			}
+			g.oneofTypeDestructor(gf, of, osf, prefix)
+			if i+1 == len(oneofs) {
+				gf.P(`}`)
+			}
+		}
+		gf.P(`x.` + of.GoName + ` = nil`)
+		gf.P(`}`)
+	}
+	gf.P(message.GoIdent.GoName + `Pool.Put(x)`)
+	// end func
+	gf.P(`}`)
+	gf.P(``)
+}
+
+func (g *FastJsonpbGen) typeDestructor(gf *protogen.GeneratedFile, f *protogen.Field) {
+	v := `x.` + f.GoName
+	switch f.Desc.Kind() {
+	case protoreflect.BoolKind:
+		gf.P(v + ` = false`)
+	case protoreflect.EnumKind:
+		gf.P(v + `.Set(0)`)
+	case protoreflect.Int32Kind, protoreflect.Sint32Kind:
+		gf.P(v + ` = 0`)
+	case protoreflect.Uint32Kind, protoreflect.Fixed32Kind:
+		gf.P(v + ` = 0`)
+	case protoreflect.Int64Kind, protoreflect.Sint64Kind:
+		gf.P(v + ` = 0`)
+	case protoreflect.Uint64Kind, protoreflect.Fixed64Kind:
+		gf.P(v + ` = 0`)
+	case protoreflect.Sfixed32Kind, protoreflect.FloatKind:
+		gf.P(v + ` = 0`)
+	case protoreflect.Sfixed64Kind, protoreflect.DoubleKind:
+		gf.P(v + ` = 0`)
+	case protoreflect.StringKind:
+		gf.P(v + ` = ""`)
+	case protoreflect.BytesKind:
+		gf.P(v + ` = nil`)
+	case protoreflect.MessageKind:
+		gf.P(v + `.Destructor()`)
+		gf.P(v + ` = nil`)
+	case protoreflect.GroupKind:
+		// TODO  unspported type
+	default:
+		// TODO  unknown type
+	}
+}
+
+func (g *FastJsonpbGen) listDestructor(gf *protogen.GeneratedFile, f *protogen.Field) {
+	if f.Desc.Kind() == protoreflect.MessageKind {
+		gf.P(`for i,_ := range x.` + f.GoName + `{`)
+		gf.P(`x.` + f.GoName + `[i].Destructor()`)
+		gf.P(`}`)
+	}
+	gf.P(`x.` + f.GoName + ` = nil`)
+}
+
+func (g *FastJsonpbGen) mapDestructor(gf *protogen.GeneratedFile, f *protogen.Field) {
+	if f.Desc.MapValue().Kind() == protoreflect.MessageKind {
+		gf.P(`for i,_ := range x.` + f.GoName + `{`)
+		gf.P(`x.` + f.GoName + `[i].Destructor()`)
+		gf.P(`}`)
+	}
+	gf.P(`x.` + f.GoName + ` = nil`)
+}
+
+func (g *FastJsonpbGen) oneofTypeDestructor(gf *protogen.GeneratedFile, of *protogen.Oneof, f *protogen.Field, prefix string) {
+	gf.P(prefix + `(*` + f.GoIdent.GoName + `); ok {`)
+	gf.P(`x.Get` + f.GoName + `().Destructor()`)
 }

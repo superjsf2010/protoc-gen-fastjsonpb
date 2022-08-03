@@ -6,6 +6,7 @@ package example
 import (
 	buffer "github.com/superjsf2010/protoc-gen-fastjsonpb/x/buffer"
 	jsonparser "github.com/superjsf2010/protoc-gen-fastjsonpb/x/jsonparser"
+	sync "sync"
 )
 
 func (x *Msg) FastMarshal(buf *buffer.Buffer) {
@@ -599,12 +600,57 @@ func (x *Msg) FastUnmarshal(p *jsonparser.Parser) {
 			tmp.OneofBol = p.Bol()
 			x.TestOneof = tmp
 		default:
-			p.Parse()
+			p.PassParse()
 		}
 		p.AssertSymbol(',')
 	}
 	p.AssertSymbol(',')
 	p.Symbol('}')
+}
+
+var MsgPool sync.Pool
+
+func MsgNew() *Msg {
+	if v := MsgPool.Get(); v != nil {
+		return v.(*Msg)
+	}
+	return &Msg{}
+}
+func (x *Msg) Destructor() {
+	if x == nil {
+		panic("type Msg is nil")
+	}
+	x.Bol = false
+	x.Str = ""
+	x.In32 = 0
+	x.In64 = 0
+	x.Uin32 = 0
+	x.Uin64 = 0
+	x.Flt32 = 0
+	x.Flt64 = 0
+	x.Byts = nil
+	x.BolArr = nil
+	x.StrArr = nil
+	x.In32Arr = nil
+	x.In64Arr = nil
+	x.Uin32Arr = nil
+	x.Uin64Arr = nil
+	x.Flt32Arr = nil
+	x.Flt64Arr = nil
+	x.BytsArr = nil
+	x.BolMap = nil
+	x.StringMap = nil
+	x.In32Map = nil
+	x.In64Map = nil
+	x.Uin32Map = nil
+	x.Uin64Map = nil
+	x.Flt32Map = nil
+	x.Flt64Map = nil
+	x.BytsMap = nil
+	if x.TestOneof != nil {
+		x.TestOneof = nil
+	}
+	MsgPool.Put(x)
 }
 
 func (x *Msg) IsEmptyBol() bool {
@@ -1262,7 +1308,7 @@ func (x *Example) FastUnmarshal(p *jsonparser.Parser) {
 			}
 
 		case "msg":
-			x.Msg = &Msg{}
+			x.Msg = MsgNew()
 			x.Msg.FastUnmarshal(p)
 
 		case "bolArr":
@@ -1386,7 +1432,7 @@ func (x *Example) FastUnmarshal(p *jsonparser.Parser) {
 			p.Symbol('[')
 			arr := make([]*Msg, 0)
 			for !p.IsSymbol(']') {
-				tmp := &Msg{}
+				tmp := MsgNew()
 				tmp.FastUnmarshal(p)
 				arr = append(arr, tmp)
 				p.AssertSymbol(',')
@@ -1538,7 +1584,7 @@ func (x *Example) FastUnmarshal(p *jsonparser.Parser) {
 			for !p.IsSymbol('}') {
 				key := p.Str()
 				p.AssertSymbol(':')
-				tmp := &Msg{}
+				tmp := MsgNew()
 				tmp.FastUnmarshal(p)
 				m[key] = tmp
 				p.AssertSymbol(',')
@@ -1556,7 +1602,7 @@ func (x *Example) FastUnmarshal(p *jsonparser.Parser) {
 			}
 
 		case "nestedMsg":
-			x.NestedMsg = &Example_NestedMsg{}
+			x.NestedMsg = Example_NestedMsgNew()
 			x.NestedMsg.FastUnmarshal(p)
 
 		case "nestedTypMap":
@@ -1585,7 +1631,7 @@ func (x *Example) FastUnmarshal(p *jsonparser.Parser) {
 			for !p.IsSymbol('}') {
 				key := p.Str()
 				p.AssertSymbol(':')
-				tmp := &Example_NestedMsg{}
+				tmp := Example_NestedMsgNew()
 				tmp.FastUnmarshal(p)
 				m[key] = tmp
 				p.AssertSymbol(',')
@@ -1632,16 +1678,85 @@ func (x *Example) FastUnmarshal(p *jsonparser.Parser) {
 			x.TestOneof = tmp
 		case "oneofMsg":
 			tmp := &Example_OneofMsg{}
-			tmp.OneofMsg = &Msg{}
+			tmp.OneofMsg = MsgNew()
 			tmp.OneofMsg.FastUnmarshal(p)
 			x.TestOneof = tmp
 		default:
-			p.Parse()
+			p.PassParse()
 		}
 		p.AssertSymbol(',')
 	}
 	p.AssertSymbol(',')
 	p.Symbol('}')
+}
+
+var ExamplePool sync.Pool
+
+func ExampleNew() *Example {
+	if v := ExamplePool.Get(); v != nil {
+		return v.(*Example)
+	}
+	return &Example{}
+}
+func (x *Example) Destructor() {
+	if x == nil {
+		panic("type Example is nil")
+	}
+	x.Bol = false
+	x.Str = ""
+	x.In32 = 0
+	x.In64 = 0
+	x.Uin32 = 0
+	x.Uin64 = 0
+	x.Flt32 = 0
+	x.Flt64 = 0
+	x.Byts = nil
+	x.Typ.Set(0)
+	x.Msg.Destructor()
+	x.Msg = nil
+	x.BolArr = nil
+	x.StrArr = nil
+	x.In32Arr = nil
+	x.In64Arr = nil
+	x.Uin32Arr = nil
+	x.Uin64Arr = nil
+	x.Flt32Arr = nil
+	x.Flt64Arr = nil
+	x.BytsArr = nil
+	x.TypArr = nil
+	for i, _ := range x.MsgArr {
+		x.MsgArr[i].Destructor()
+	}
+	x.MsgArr = nil
+	x.BolMap = nil
+	x.StringMap = nil
+	x.In32Map = nil
+	x.In64Map = nil
+	x.Uin32Map = nil
+	x.Uin64Map = nil
+	x.Flt32Map = nil
+	x.Flt64Map = nil
+	x.BytsMap = nil
+	x.TypMap = nil
+	for i, _ := range x.MsgMap {
+		x.MsgMap[i].Destructor()
+	}
+	x.MsgMap = nil
+	x.NestedTyp.Set(0)
+	x.NestedMsg.Destructor()
+	x.NestedMsg = nil
+	x.NestedTypMap = nil
+	for i, _ := range x.NestedMsgMap {
+		x.NestedMsgMap[i].Destructor()
+	}
+	x.NestedMsgMap = nil
+	if x.TestOneof != nil {
+		if _, ok := x.GetTestOneof().(*Example_OneofMsg); ok {
+			x.GetOneofMsg().Destructor()
+		}
+		x.TestOneof = nil
+	}
+	ExamplePool.Put(x)
 }
 
 func (x *Example) IsEmptyBol() bool {
@@ -1821,12 +1936,28 @@ func (x *Example_NestedMsg) FastUnmarshal(p *jsonparser.Parser) {
 			x.Str = p.Str()
 
 		default:
-			p.Parse()
+			p.PassParse()
 		}
 		p.AssertSymbol(',')
 	}
 	p.AssertSymbol(',')
 	p.Symbol('}')
+}
+
+var Example_NestedMsgPool sync.Pool
+
+func Example_NestedMsgNew() *Example_NestedMsg {
+	if v := Example_NestedMsgPool.Get(); v != nil {
+		return v.(*Example_NestedMsg)
+	}
+	return &Example_NestedMsg{}
+}
+func (x *Example_NestedMsg) Destructor() {
+	if x == nil {
+		panic("type Example_NestedMsg is nil")
+	}
+	x.Str = ""
+	Example_NestedMsgPool.Put(x)
 }
 
 func (x *Example_NestedMsg) IsEmptyStr() bool {

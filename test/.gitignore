@@ -1,3 +1,4 @@
 *.log
-*.pprof
+*.prof
 *.svg
+*.test

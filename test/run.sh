@@ -9,5 +9,6 @@
 if [ "$1" == "b" ];then
     go test -bench=. --test.benchmem
 elif [ "$1" == "g" ];then
-    go-torch marshal.test cpu.prof
+    go test -bench . -cpuprofile=cpu.prof
+    go-torch test.test cpu.prof
 fi

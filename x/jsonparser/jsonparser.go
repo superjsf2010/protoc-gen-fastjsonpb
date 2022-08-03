@@ -401,6 +401,30 @@ func (p *Parser) arr() []interface{} {
 	return ret
 }
 
+// 解析对象
+func (p *Parser) passObj() {
+	for !p.IsSymbol('}') {
+		p.Str()
+		p.AssertSymbol(':')
+		p.PassParse()
+		p.AssertSymbol(',')
+	}
+	// 处理空对象情况
+	p.AssertSymbol(',')
+	p.Symbol('}')
+}
+
+// 解析数组
+func (p *Parser) passArr() {
+	for !p.IsSymbol(']') {
+		p.PassParse()
+		p.AssertSymbol(',')
+	}
+	// 处理空数组情况
+	p.AssertSymbol(',')
+	p.Symbol(']')
+}
+
 func (p *Parser) IsSymbol(b byte) bool {
 	return p.data[p.off] == b
 }
@@ -453,4 +477,40 @@ func (p *Parser) Parse() interface{} {
 	}
 
 	panic("unknown token")
+}
+
+// 只解析不返回数据
+func (p *Parser) PassParse() {
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Println(r)
+		}
+	}()
+
+	// 尝试获取新token，需要清空上一次token信息
+	if p.token.kind != tokenUnknown {
+		panic("system exception")
+	}
+
+	p.getToken()
+
+	switch p.token.kind {
+	case tokenBool:
+		p.Bol()
+	case tokenString:
+		p.Str()
+	case tokenNumber:
+		p.Number()
+	case tokenNull:
+		p.Null()
+	case tokenSymbol:
+		p.reset()
+		if p.token.symbol == '{' {
+			p.passObj()
+		} else if p.token.symbol == '[' {
+			p.passArr()
+		}
+	default:
+		panic("unknown token")
+	}
 }
