@@ -201,7 +201,7 @@ func (g *FastJsonpbGen) generateMarshal(message *protogen.Message, gf *protogen.
 // 处理array
 func (g *FastJsonpbGen) listMarshal(gf *protogen.GeneratedFile, f *protogen.Field) {
 	gf.P(`if !x.IsEmpty` + f.GoName + `() {`)
-	g.keyMarshal(gf, protoreflect.StringKind, `"\"`+f.Desc.JSONName()+`\""`)
+	g.keyMarshal(gf, protoreflect.StringKind, `"`+f.Desc.JSONName()+`"`)
 	g.symbolMarshal(gf, `[`)
 	gf.P(`for i,_ := range x.` + f.GoName + `{`)
 	// 为提高性能使用下标形式访问
@@ -219,14 +219,14 @@ func (g *FastJsonpbGen) mapMarshal(gf *protogen.GeneratedFile, f *protogen.Field
 	// protobuf官方文档说明map的key_type
 	// where the key_type can be any integral or string type (so, any scalar type except for floating point types and bytes). Note that enum is not a valid key_type
 	gf.P(`if !x.IsEmpty` + f.GoName + `() {`)
-	g.keyMarshal(gf, protoreflect.StringKind, `"\"`+f.Desc.JSONName()+`\""`)
+	g.keyMarshal(gf, protoreflect.StringKind, `"`+f.Desc.JSONName()+`"`)
 	key := f.Desc.MapKey()
 	val := f.Desc.MapValue()
 	g.symbolMarshal(gf, `{`)
 	gf.P(`for k,_ := range x.` + f.GoName + `{`)
 	// 为了让field和map_key使用同一个keyMarshal方法，这里加个特殊判断
 	if key.Kind() == protoreflect.StringKind {
-		g.keyMarshal(gf, key.Kind(), `"\""+k+"\""`)
+		g.keyMarshal(gf, key.Kind(), `k`)
 	} else {
 		g.keyMarshal(gf, key.Kind(), `k`)
 	}
@@ -243,7 +243,7 @@ func (g *FastJsonpbGen) mapMarshal(gf *protogen.GeneratedFile, f *protogen.Field
 // 处理一般类型
 func (g *FastJsonpbGen) typeMarshal(gf *protogen.GeneratedFile, f *protogen.Field) {
 	gf.P(`if !x.IsEmpty` + f.GoName + `() {`)
-	g.keyMarshal(gf, protoreflect.StringKind, `"\"`+f.Desc.JSONName()+`\""`)
+	g.keyMarshal(gf, protoreflect.StringKind, `"`+f.Desc.JSONName()+`"`)
 	g.valMarshal(gf, f.Desc.Kind(), `x.Get`+f.GoName+`()`)
 	g.symbolMarshal(gf, `,`)
 	gf.P(`}`)
@@ -252,7 +252,7 @@ func (g *FastJsonpbGen) typeMarshal(gf *protogen.GeneratedFile, f *protogen.Fiel
 // 处理oneof一般类型
 func (g *FastJsonpbGen) oneofTypeMarshal(gf *protogen.GeneratedFile, f *protogen.Field, prefix string) {
 	gf.P(prefix + `(*` + f.GoIdent.GoName + `); ok {`)
-	g.keyMarshal(gf, protoreflect.StringKind, `"\"`+f.Desc.JSONName()+`\""`)
+	g.keyMarshal(gf, protoreflect.StringKind, `"`+f.Desc.JSONName()+`"`)
 	g.valMarshal(gf, f.Desc.Kind(), `x.Get`+f.GoName+`()`)
 	g.symbolMarshal(gf, `,`)
 }
@@ -262,7 +262,7 @@ func (g *FastJsonpbGen) valMarshal(gf *protogen.GeneratedFile, k protoreflect.Ki
 	case protoreflect.BoolKind:
 		gf.P(`buf.WriteBool(` + v + `)`)
 	case protoreflect.EnumKind:
-		gf.P(`buf.WriteString("\""+` + v + `.String()+"\"")`)
+		gf.P(`buf.WriteStringWithQuote(` + v + `.String())`)
 	case protoreflect.Int32Kind, protoreflect.Sint32Kind:
 		gf.P(`buf.WriteInt32(` + v + `)`)
 	case protoreflect.Uint32Kind, protoreflect.Fixed32Kind:
@@ -276,7 +276,7 @@ func (g *FastJsonpbGen) valMarshal(gf *protogen.GeneratedFile, k protoreflect.Ki
 	case protoreflect.Sfixed64Kind, protoreflect.DoubleKind:
 		gf.P(`buf.WriteFloat64(` + v + `)`)
 	case protoreflect.StringKind:
-		gf.P(`buf.WriteString("\""+` + v + `+"\"")`)
+		gf.P(`buf.WriteStringWithQuote(` + v + `)`)
 	case protoreflect.BytesKind:
 		gf.P(`buf.WriteBytes(` + v + `)`)
 	case protoreflect.MessageKind:
@@ -292,7 +292,7 @@ func (g *FastJsonpbGen) valMarshal(gf *protogen.GeneratedFile, k protoreflect.Ki
 func (g *FastJsonpbGen) keyMarshal(gf *protogen.GeneratedFile, k protoreflect.Kind, key string) {
 	switch k {
 	case protoreflect.StringKind:
-		gf.P(`buf.WriteString(` + key + `)`)
+		gf.P(`buf.WriteStringWithQuote(` + key + `)`)
 	case protoreflect.Int32Kind, protoreflect.Sint32Kind:
 		gf.P(`buf.WriteInt32(` + key + `)`)
 	case protoreflect.Uint32Kind, protoreflect.Fixed32Kind:

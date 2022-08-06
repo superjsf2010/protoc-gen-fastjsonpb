@@ -15,70 +15,70 @@ func (x *Msg) FastMarshal(buf *buffer.Buffer) {
 	}
 	buf.WriteString("{")
 	if !x.IsEmptyBol() {
-		buf.WriteString("\"bol\"")
+		buf.WriteStringWithQuote("bol")
 		buf.WriteString(":")
 		buf.WriteBool(x.GetBol())
 		buf.WriteString(",")
 	}
 
 	if !x.IsEmptyStr() {
-		buf.WriteString("\"str\"")
+		buf.WriteStringWithQuote("str")
 		buf.WriteString(":")
-		buf.WriteString("\"" + x.GetStr() + "\"")
+		buf.WriteStringWithQuote(x.GetStr())
 		buf.WriteString(",")
 	}
 
 	if !x.IsEmptyIn32() {
-		buf.WriteString("\"in32\"")
+		buf.WriteStringWithQuote("in32")
 		buf.WriteString(":")
 		buf.WriteInt32(x.GetIn32())
 		buf.WriteString(",")
 	}
 
 	if !x.IsEmptyIn64() {
-		buf.WriteString("\"in64\"")
+		buf.WriteStringWithQuote("in64")
 		buf.WriteString(":")
 		buf.WriteInt64(x.GetIn64())
 		buf.WriteString(",")
 	}
 
 	if !x.IsEmptyUin32() {
-		buf.WriteString("\"uin32\"")
+		buf.WriteStringWithQuote("uin32")
 		buf.WriteString(":")
 		buf.WriteUint32(x.GetUin32())
 		buf.WriteString(",")
 	}
 
 	if !x.IsEmptyUin64() {
-		buf.WriteString("\"uin64\"")
+		buf.WriteStringWithQuote("uin64")
 		buf.WriteString(":")
 		buf.WriteUint64(x.GetUin64())
 		buf.WriteString(",")
 	}
 
 	if !x.IsEmptyFlt32() {
-		buf.WriteString("\"flt32\"")
+		buf.WriteStringWithQuote("flt32")
 		buf.WriteString(":")
 		buf.WriteFloat32(x.GetFlt32())
 		buf.WriteString(",")
 	}
 
 	if !x.IsEmptyFlt64() {
-		buf.WriteString("\"flt64\"")
+		buf.WriteStringWithQuote("flt64")
 		buf.WriteString(":")
 		buf.WriteFloat64(x.GetFlt64())
 		buf.WriteString(",")
 	}
 
 	if !x.IsEmptyByts() {
-		buf.WriteString("\"byts\"")
+		buf.WriteStringWithQuote("byts")
 		buf.WriteString(":")
 		buf.WriteBytes(x.GetByts())
 		buf.WriteString(",")
 	}
 
 	if !x.IsEmptyBolArr() {
-		buf.WriteString("\"bolArr\"")
+		buf.WriteStringWithQuote("bolArr")
 		buf.WriteString(":")
 		buf.WriteString("[")
 		for i, _ := range x.BolArr {
@@ -91,11 +91,11 @@ func (x *Msg) FastMarshal(buf *buffer.Buffer) {
 	}
 
 	if !x.IsEmptyStrArr() {
-		buf.WriteString("\"strArr\"")
+		buf.WriteStringWithQuote("strArr")
 		buf.WriteString(":")
 		buf.WriteString("[")
 		for i, _ := range x.StrArr {
-			buf.WriteString("\"" + x.StrArr[i] + "\"")
+			buf.WriteStringWithQuote(x.StrArr[i])
 			buf.WriteString(",")
 		}
 		buf.FixSymbol()
@@ -104,7 +104,7 @@ func (x *Msg) FastMarshal(buf *buffer.Buffer) {
 	}
 
 	if !x.IsEmptyIn32Arr() {
-		buf.WriteString("\"in32Arr\"")
+		buf.WriteStringWithQuote("in32Arr")
 		buf.WriteString(":")
 		buf.WriteString("[")
 		for i, _ := range x.In32Arr {
@@ -117,7 +117,7 @@ func (x *Msg) FastMarshal(buf *buffer.Buffer) {
 	}
 
 	if !x.IsEmptyIn64Arr() {
-		buf.WriteString("\"in64Arr\"")
+		buf.WriteStringWithQuote("in64Arr")
 		buf.WriteString(":")
 		buf.WriteString("[")
 		for i, _ := range x.In64Arr {
@@ -130,7 +130,7 @@ func (x *Msg) FastMarshal(buf *buffer.Buffer) {
 	}
 
 	if !x.IsEmptyUin32Arr() {
-		buf.WriteString("\"uin32Arr\"")
+		buf.WriteStringWithQuote("uin32Arr")
 		buf.WriteString(":")
 		buf.WriteString("[")
 		for i, _ := range x.Uin32Arr {
@@ -143,7 +143,7 @@ func (x *Msg) FastMarshal(buf *buffer.Buffer) {
 	}
 
 	if !x.IsEmptyUin64Arr() {
-		buf.WriteString("\"uin64Arr\"")
+		buf.WriteStringWithQuote("uin64Arr")
 		buf.WriteString(":")
 		buf.WriteString("[")
 		for i, _ := range x.Uin64Arr {
@@ -156,7 +156,7 @@ func (x *Msg) FastMarshal(buf *buffer.Buffer) {
 	}
 
 	if !x.IsEmptyFlt32Arr() {
-		buf.WriteString("\"flt32Arr\"")
+		buf.WriteStringWithQuote("flt32Arr")
 		buf.WriteString(":")
 		buf.WriteString("[")
 		for i, _ := range x.Flt32Arr {
@@ -169,7 +169,7 @@ func (x *Msg) FastMarshal(buf *buffer.Buffer) {
 	}
 
 	if !x.IsEmptyFlt64Arr() {
-		buf.WriteString("\"flt64Arr\"")
+		buf.WriteStringWithQuote("flt64Arr")
 		buf.WriteString(":")
 		buf.WriteString("[")
 		for i, _ := range x.Flt64Arr {
@@ -182,7 +182,7 @@ func (x *Msg) FastMarshal(buf *buffer.Buffer) {
 	}
 
 	if !x.IsEmptyBytsArr() {
-		buf.WriteString("\"bytsArr\"")
+		buf.WriteStringWithQuote("bytsArr")
 		buf.WriteString(":")
 		buf.WriteString("[")
 		for i, _ := range x.BytsArr {
@@ -195,11 +195,11 @@ func (x *Msg) FastMarshal(buf *buffer.Buffer) {
 	}
 
 	if !x.IsEmptyBolMap() {
-		buf.WriteString("\"bolMap\"")
+		buf.WriteStringWithQuote("bolMap")
 		buf.WriteString(":")
 		buf.WriteString("{")
 		for k, _ := range x.BolMap {
-			buf.WriteString("\"" + k + "\"")
+			buf.WriteStringWithQuote(k)
 			buf.WriteString(":")
 			buf.WriteBool(x.BolMap[k])
 			buf.WriteString(",")
@@ -210,13 +210,13 @@ func (x *Msg) FastMarshal(buf *buffer.Buffer) {
 	}
 
 	if !x.IsEmptyStringMap() {
-		buf.WriteString("\"stringMap\"")
+		buf.WriteStringWithQuote("stringMap")
 		buf.WriteString(":")
 		buf.WriteString("{")
 		for k, _ := range x.StringMap {
-			buf.WriteString("\"" + k + "\"")
+			buf.WriteStringWithQuote(k)
 			buf.WriteString(":")
-			buf.WriteString("\"" + x.StringMap[k] + "\"")
+			buf.WriteStringWithQuote(x.StringMap[k])
 			buf.WriteString(",")
 		}
 		buf.FixSymbol()
@@ -225,11 +225,11 @@ func (x *Msg) FastMarshal(buf *buffer.Buffer) {
 	}
 
 	if !x.IsEmptyIn32Map() {
-		buf.WriteString("\"in32Map\"")
+		buf.WriteStringWithQuote("in32Map")
 		buf.WriteString(":")
 		buf.WriteString("{")
 		for k, _ := range x.In32Map {
-			buf.WriteString("\"" + k + "\"")
+			buf.WriteStringWithQuote(k)
 			buf.WriteString(":")
 			buf.WriteInt32(x.In32Map[k])
 			buf.WriteString(",")
@@ -240,11 +240,11 @@ func (x *Msg) FastMarshal(buf *buffer.Buffer) {
 	}
 
 	if !x.IsEmptyIn64Map() {
-		buf.WriteString("\"in64Map\"")
+		buf.WriteStringWithQuote("in64Map")
 		buf.WriteString(":")
 		buf.WriteString("{")
 		for k, _ := range x.In64Map {
-			buf.WriteString("\"" + k + "\"")
+			buf.WriteStringWithQuote(k)
 			buf.WriteString(":")
 			buf.WriteInt64(x.In64Map[k])
 			buf.WriteString(",")
@@ -255,11 +255,11 @@ func (x *Msg) FastMarshal(buf *buffer.Buffer) {
 	}
 
 	if !x.IsEmptyUin32Map() {
-		buf.WriteString("\"uin32Map\"")
+		buf.WriteStringWithQuote("uin32Map")
 		buf.WriteString(":")
 		buf.WriteString("{")
 		for k, _ := range x.Uin32Map {
-			buf.WriteString("\"" + k + "\"")
+			buf.WriteStringWithQuote(k)
 			buf.WriteString(":")
 			buf.WriteUint32(x.Uin32Map[k])
 			buf.WriteString(",")
@@ -270,11 +270,11 @@ func (x *Msg) FastMarshal(buf *buffer.Buffer) {
 	}
 
 	if !x.IsEmptyUin64Map() {
-		buf.WriteString("\"uin64Map\"")
+		buf.WriteStringWithQuote("uin64Map")
 		buf.WriteString(":")
 		buf.WriteString("{")
 		for k, _ := range x.Uin64Map {
-			buf.WriteString("\"" + k + "\"")
+			buf.WriteStringWithQuote(k)
 			buf.WriteString(":")
 			buf.WriteUint64(x.Uin64Map[k])
 			buf.WriteString(",")
@@ -285,11 +285,11 @@ func (x *Msg) FastMarshal(buf *buffer.Buffer) {
 	}
 
 	if !x.IsEmptyFlt32Map() {
-		buf.WriteString("\"flt32Map\"")
+		buf.WriteStringWithQuote("flt32Map")
 		buf.WriteString(":")
 		buf.WriteString("{")
 		for k, _ := range x.Flt32Map {
-			buf.WriteString("\"" + k + "\"")
+			buf.WriteStringWithQuote(k)
 			buf.WriteString(":")
 			buf.WriteFloat32(x.Flt32Map[k])
 			buf.WriteString(",")
@@ -300,11 +300,11 @@ func (x *Msg) FastMarshal(buf *buffer.Buffer) {
 	}
 
 	if !x.IsEmptyFlt64Map() {
-		buf.WriteString("\"flt64Map\"")
+		buf.WriteStringWithQuote("flt64Map")
 		buf.WriteString(":")
 		buf.WriteString("{")
 		for k, _ := range x.Flt64Map {
-			buf.WriteString("\"" + k + "\"")
+			buf.WriteStringWithQuote(k)
 			buf.WriteString(":")
 			buf.WriteFloat64(x.Flt64Map[k])
 			buf.WriteString(",")
@@ -315,11 +315,11 @@ func (x *Msg) FastMarshal(buf *buffer.Buffer) {
 	}
 
 	if !x.IsEmptyBytsMap() {
-		buf.WriteString("\"bytsMap\"")
+		buf.WriteStringWithQuote("bytsMap")
 		buf.WriteString(":")
 		buf.WriteString("{")
 		for k, _ := range x.BytsMap {
-			buf.WriteString("\"" + k + "\"")
+			buf.WriteStringWithQuote(k)
 			buf.WriteString(":")
 			buf.WriteBytes(x.BytsMap[k])
 			buf.WriteString(",")
@@ -331,7 +331,7 @@ func (x *Msg) FastMarshal(buf *buffer.Buffer) {
 
 	if x.TestOneof != nil {
 		if _, ok := x.GetTestOneof().(*Msg_OneofBol); ok {
-			buf.WriteString("\"oneofBol\"")
+			buf.WriteStringWithQuote("oneofBol")
 			buf.WriteString(":")
 			buf.WriteBool(x.GetOneofBol())
 			buf.WriteString(",")
@@ -767,84 +767,84 @@ func (x *Example) FastMarshal(buf *buffer.Buffer) {
 	}
 	buf.WriteString("{")
 	if !x.IsEmptyBol() {
-		buf.WriteString("\"bol\"")
+		buf.WriteStringWithQuote("bol")
 		buf.WriteString(":")
 		buf.WriteBool(x.GetBol())
 		buf.WriteString(",")
 	}
 
 	if !x.IsEmptyStr() {
-		buf.WriteString("\"str\"")
+		buf.WriteStringWithQuote("str")
 		buf.WriteString(":")
-		buf.WriteString("\"" + x.GetStr() + "\"")
+		buf.WriteStringWithQuote(x.GetStr())
 		buf.WriteString(",")
 	}
 
 	if !x.IsEmptyIn32() {
-		buf.WriteString("\"in32\"")
+		buf.WriteStringWithQuote("in32")
 		buf.WriteString(":")
 		buf.WriteInt32(x.GetIn32())
 		buf.WriteString(",")
 	}
 
 	if !x.IsEmptyIn64() {
-		buf.WriteString("\"in64\"")
+		buf.WriteStringWithQuote("in64")
 		buf.WriteString(":")
 		buf.WriteInt64(x.GetIn64())
 		buf.WriteString(",")
 	}
 
 	if !x.IsEmptyUin32() {
-		buf.WriteString("\"uin32\"")
+		buf.WriteStringWithQuote("uin32")
 		buf.WriteString(":")
 		buf.WriteUint32(x.GetUin32())
 		buf.WriteString(",")
 	}
 
 	if !x.IsEmptyUin64() {
-		buf.WriteString("\"uin64\"")
+		buf.WriteStringWithQuote("uin64")
 		buf.WriteString(":")
 		buf.WriteUint64(x.GetUin64())
 		buf.WriteString(",")
 	}
 
 	if !x.IsEmptyFlt32() {
-		buf.WriteString("\"flt32\"")
+		buf.WriteStringWithQuote("flt32")
 		buf.WriteString(":")
 		buf.WriteFloat32(x.GetFlt32())
 		buf.WriteString(",")
 	}
 
 	if !x.IsEmptyFlt64() {
-		buf.WriteString("\"flt64\"")
+		buf.WriteStringWithQuote("flt64")
 		buf.WriteString(":")
 		buf.WriteFloat64(x.GetFlt64())
 		buf.WriteString(",")
 	}
 
 	if !x.IsEmptyByts() {
-		buf.WriteString("\"byts\"")
+		buf.WriteStringWithQuote("byts")
 		buf.WriteString(":")
 		buf.WriteBytes(x.GetByts())
 		buf.WriteString(",")
 	}
 
 	if !x.IsEmptyTyp() {
-		buf.WriteString("\"typ\"")
+		buf.WriteStringWithQuote("typ")
 		buf.WriteString(":")
-		buf.WriteString("\"" + x.GetTyp().String() + "\"")
+		buf.WriteStringWithQuote(x.GetTyp().String())
 		buf.WriteString(",")
 	}
 
 	if !x.IsEmptyMsg() {
-		buf.WriteString("\"msg\"")
+		buf.WriteStringWithQuote("msg")
 		buf.WriteString(":")
 		x.GetMsg().FastMarshal(buf)
 		buf.WriteString(",")
 	}
 
 	if !x.IsEmptyBolArr() {
-		buf.WriteString("\"bolArr\"")
+		buf.WriteStringWithQuote("bolArr")
 		buf.WriteString(":")
 		buf.WriteString("[")
 		for i, _ := range x.BolArr {
@@ -857,11 +857,11 @@ func (x *Example) FastMarshal(buf *buffer.Buffer) {
 	}
 
 	if !x.IsEmptyStrArr() {
-		buf.WriteString("\"strArr\"")
+		buf.WriteStringWithQuote("strArr")
 		buf.WriteString(":")
 		buf.WriteString("[")
 		for i, _ := range x.StrArr {
-			buf.WriteString("\"" + x.StrArr[i] + "\"")
+			buf.WriteStringWithQuote(x.StrArr[i])
 			buf.WriteString(",")
 		}
 		buf.FixSymbol()
@@ -870,7 +870,7 @@ func (x *Example) FastMarshal(buf *buffer.Buffer) {
 	}
 
 	if !x.IsEmptyIn32Arr() {
-		buf.WriteString("\"in32Arr\"")
+		buf.WriteStringWithQuote("in32Arr")
 		buf.WriteString(":")
 		buf.WriteString("[")
 		for i, _ := range x.In32Arr {
@@ -883,7 +883,7 @@ func (x *Example) FastMarshal(buf *buffer.Buffer) {
 	}
 
 	if !x.IsEmptyIn64Arr() {
-		buf.WriteString("\"in64Arr\"")
+		buf.WriteStringWithQuote("in64Arr")
 		buf.WriteString(":")
 		buf.WriteString("[")
 		for i, _ := range x.In64Arr {
@@ -896,7 +896,7 @@ func (x *Example) FastMarshal(buf *buffer.Buffer) {
 	}
 
 	if !x.IsEmptyUin32Arr() {
-		buf.WriteString("\"uin32Arr\"")
+		buf.WriteStringWithQuote("uin32Arr")
 		buf.WriteString(":")
 		buf.WriteString("[")
 		for i, _ := range x.Uin32Arr {
@@ -909,7 +909,7 @@ func (x *Example) FastMarshal(buf *buffer.Buffer) {
 	}
 
 	if !x.IsEmptyUin64Arr() {
-		buf.WriteString("\"uin64Arr\"")
+		buf.WriteStringWithQuote("uin64Arr")
 		buf.WriteString(":")
 		buf.WriteString("[")
 		for i, _ := range x.Uin64Arr {
@@ -922,7 +922,7 @@ func (x *Example) FastMarshal(buf *buffer.Buffer) {
 	}
 
 	if !x.IsEmptyFlt32Arr() {
-		buf.WriteString("\"flt32Arr\"")
+		buf.WriteStringWithQuote("flt32Arr")
 		buf.WriteString(":")
 		buf.WriteString("[")
 		for i, _ := range x.Flt32Arr {
@@ -935,7 +935,7 @@ func (x *Example) FastMarshal(buf *buffer.Buffer) {
 	}
 
 	if !x.IsEmptyFlt64Arr() {
-		buf.WriteString("\"flt64Arr\"")
+		buf.WriteStringWithQuote("flt64Arr")
 		buf.WriteString(":")
 		buf.WriteString("[")
 		for i, _ := range x.Flt64Arr {
@@ -948,7 +948,7 @@ func (x *Example) FastMarshal(buf *buffer.Buffer) {
 	}
 
 	if !x.IsEmptyBytsArr() {
-		buf.WriteString("\"bytsArr\"")
+		buf.WriteStringWithQuote("bytsArr")
 		buf.WriteString(":")
 		buf.WriteString("[")
 		for i, _ := range x.BytsArr {
@@ -961,11 +961,11 @@ func (x *Example) FastMarshal(buf *buffer.Buffer) {
 	}
 
 	if !x.IsEmptyTypArr() {
-		buf.WriteString("\"typArr\"")
+		buf.WriteStringWithQuote("typArr")
 		buf.WriteString(":")
 		buf.WriteString("[")
 		for i, _ := range x.TypArr {
-			buf.WriteString("\"" + x.TypArr[i].String() + "\"")
+			buf.WriteStringWithQuote(x.TypArr[i].String())
 			buf.WriteString(",")
 		}
 		buf.FixSymbol()
@@ -974,7 +974,7 @@ func (x *Example) FastMarshal(buf *buffer.Buffer) {
 	}
 
 	if !x.IsEmptyMsgArr() {
-		buf.WriteString("\"msgArr\"")
+		buf.WriteStringWithQuote("msgArr")
 		buf.WriteString(":")
 		buf.WriteString("[")
 		for i, _ := range x.MsgArr {
@@ -987,11 +987,11 @@ func (x *Example) FastMarshal(buf *buffer.Buffer) {
 	}
 
 	if !x.IsEmptyBolMap() {
-		buf.WriteString("\"bolMap\"")
+		buf.WriteStringWithQuote("bolMap")
 		buf.WriteString(":")
 		buf.WriteString("{")
 		for k, _ := range x.BolMap {
-			buf.WriteString("\"" + k + "\"")
+			buf.WriteStringWithQuote(k)
 			buf.WriteString(":")
 			buf.WriteBool(x.BolMap[k])
 			buf.WriteString(",")
@@ -1002,13 +1002,13 @@ func (x *Example) FastMarshal(buf *buffer.Buffer) {
 	}
 
 	if !x.IsEmptyStringMap() {
-		buf.WriteString("\"stringMap\"")
+		buf.WriteStringWithQuote("stringMap")
 		buf.WriteString(":")
 		buf.WriteString("{")
 		for k, _ := range x.StringMap {
-			buf.WriteString("\"" + k + "\"")
+			buf.WriteStringWithQuote(k)
 			buf.WriteString(":")
-			buf.WriteString("\"" + x.StringMap[k] + "\"")
+			buf.WriteStringWithQuote(x.StringMap[k])
 			buf.WriteString(",")
 		}
 		buf.FixSymbol()
@@ -1017,11 +1017,11 @@ func (x *Example) FastMarshal(buf *buffer.Buffer) {
 	}
 
 	if !x.IsEmptyIn32Map() {
-		buf.WriteString("\"in32Map\"")
+		buf.WriteStringWithQuote("in32Map")
 		buf.WriteString(":")
 		buf.WriteString("{")
 		for k, _ := range x.In32Map {
-			buf.WriteString("\"" + k + "\"")
+			buf.WriteStringWithQuote(k)
 			buf.WriteString(":")
 			buf.WriteInt32(x.In32Map[k])
 			buf.WriteString(",")
@@ -1032,11 +1032,11 @@ func (x *Example) FastMarshal(buf *buffer.Buffer) {
 	}
 
 	if !x.IsEmptyIn64Map() {
-		buf.WriteString("\"in64Map\"")
+		buf.WriteStringWithQuote("in64Map")
 		buf.WriteString(":")
 		buf.WriteString("{")
 		for k, _ := range x.In64Map {
-			buf.WriteString("\"" + k + "\"")
+			buf.WriteStringWithQuote(k)
 			buf.WriteString(":")
 			buf.WriteInt64(x.In64Map[k])
 			buf.WriteString(",")
@@ -1047,11 +1047,11 @@ func (x *Example) FastMarshal(buf *buffer.Buffer) {
 	}
 
 	if !x.IsEmptyUin32Map() {
-		buf.WriteString("\"uin32Map\"")
+		buf.WriteStringWithQuote("uin32Map")
 		buf.WriteString(":")
 		buf.WriteString("{")
 		for k, _ := range x.Uin32Map {
-			buf.WriteString("\"" + k + "\"")
+			buf.WriteStringWithQuote(k)
 			buf.WriteString(":")
 			buf.WriteUint32(x.Uin32Map[k])
 			buf.WriteString(",")
@@ -1062,11 +1062,11 @@ func (x *Example) FastMarshal(buf *buffer.Buffer) {
 	}
 
 	if !x.IsEmptyUin64Map() {
-		buf.WriteString("\"uin64Map\"")
+		buf.WriteStringWithQuote("uin64Map")
 		buf.WriteString(":")
 		buf.WriteString("{")
 		for k, _ := range x.Uin64Map {
-			buf.WriteString("\"" + k + "\"")
+			buf.WriteStringWithQuote(k)
 			buf.WriteString(":")
 			buf.WriteUint64(x.Uin64Map[k])
 			buf.WriteString(",")
@@ -1077,11 +1077,11 @@ func (x *Example) FastMarshal(buf *buffer.Buffer) {
 	}
 
 	if !x.IsEmptyFlt32Map() {
-		buf.WriteString("\"flt32Map\"")
+		buf.WriteStringWithQuote("flt32Map")
 		buf.WriteString(":")
 		buf.WriteString("{")
 		for k, _ := range x.Flt32Map {
-			buf.WriteString("\"" + k + "\"")
+			buf.WriteStringWithQuote(k)
 			buf.WriteString(":")
 			buf.WriteFloat32(x.Flt32Map[k])
 			buf.WriteString(",")
@@ -1092,11 +1092,11 @@ func (x *Example) FastMarshal(buf *buffer.Buffer) {
 	}
 
 	if !x.IsEmptyFlt64Map() {
-		buf.WriteString("\"flt64Map\"")
+		buf.WriteStringWithQuote("flt64Map")
 		buf.WriteString(":")
 		buf.WriteString("{")
 		for k, _ := range x.Flt64Map {
-			buf.WriteString("\"" + k + "\"")
+			buf.WriteStringWithQuote(k)
 			buf.WriteString(":")
 			buf.WriteFloat64(x.Flt64Map[k])
 			buf.WriteString(",")
@@ -1107,11 +1107,11 @@ func (x *Example) FastMarshal(buf *buffer.Buffer) {
 	}
 
 	if !x.IsEmptyBytsMap() {
-		buf.WriteString("\"bytsMap\"")
+		buf.WriteStringWithQuote("bytsMap")
 		buf.WriteString(":")
 		buf.WriteString("{")
 		for k, _ := range x.BytsMap {
-			buf.WriteString("\"" + k + "\"")
+			buf.WriteStringWithQuote(k)
 			buf.WriteString(":")
 			buf.WriteBytes(x.BytsMap[k])
 			buf.WriteString(",")
@@ -1122,13 +1122,13 @@ func (x *Example) FastMarshal(buf *buffer.Buffer) {
 	}
 
 	if !x.IsEmptyTypMap() {
-		buf.WriteString("\"typMap\"")
+		buf.WriteStringWithQuote("typMap")
 		buf.WriteString(":")
 		buf.WriteString("{")
 		for k, _ := range x.TypMap {
-			buf.WriteString("\"" + k + "\"")
+			buf.WriteStringWithQuote(k)
 			buf.WriteString(":")
-			buf.WriteString("\"" + x.TypMap[k].String() + "\"")
+			buf.WriteStringWithQuote(x.TypMap[k].String())
 			buf.WriteString(",")
 		}
 		buf.FixSymbol()
@@ -1137,11 +1137,11 @@ func (x *Example) FastMarshal(buf *buffer.Buffer) {
 	}
 
 	if !x.IsEmptyMsgMap() {
-		buf.WriteString("\"msgMap\"")
+		buf.WriteStringWithQuote("msgMap")
 		buf.WriteString(":")
 		buf.WriteString("{")
 		for k, _ := range x.MsgMap {
-			buf.WriteString("\"" + k + "\"")
+			buf.WriteStringWithQuote(k)
 			buf.WriteString(":")
 			x.MsgMap[k].FastMarshal(buf)
 			buf.WriteString(",")
@@ -1152,27 +1152,27 @@ func (x *Example) FastMarshal(buf *buffer.Buffer) {
 	}
 
 	if !x.IsEmptyNestedTyp() {
-		buf.WriteString("\"nestedTyp\"")
+		buf.WriteStringWithQuote("nestedTyp")
 		buf.WriteString(":")
-		buf.WriteString("\"" + x.GetNestedTyp().String() + "\"")
+		buf.WriteStringWithQuote(x.GetNestedTyp().String())
 		buf.WriteString(",")
 	}
 
 	if !x.IsEmptyNestedMsg() {
-		buf.WriteString("\"nestedMsg\"")
+		buf.WriteStringWithQuote("nestedMsg")
 		buf.WriteString(":")
 		x.GetNestedMsg().FastMarshal(buf)
 		buf.WriteString(",")
 	}
 
 	if !x.IsEmptyNestedTypMap() {
-		buf.WriteString("\"nestedTypMap\"")
+		buf.WriteStringWithQuote("nestedTypMap")
 		buf.WriteString(":")
 		buf.WriteString("{")
 		for k, _ := range x.NestedTypMap {
-			buf.WriteString("\"" + k + "\"")
+			buf.WriteStringWithQuote(k)
 			buf.WriteString(":")
-			buf.WriteString("\"" + x.NestedTypMap[k].String() + "\"")
+			buf.WriteStringWithQuote(x.NestedTypMap[k].String())
 			buf.WriteString(",")
 		}
 		buf.FixSymbol()
@@ -1181,11 +1181,11 @@ func (x *Example) FastMarshal(buf *buffer.Buffer) {
 	}
 
 	if !x.IsEmptyNestedMsgMap() {
-		buf.WriteString("\"nestedMsgMap\"")
+		buf.WriteStringWithQuote("nestedMsgMap")
 		buf.WriteString(":")
 		buf.WriteString("{")
 		for k, _ := range x.NestedMsgMap {
-			buf.WriteString("\"" + k + "\"")
+			buf.WriteStringWithQuote(k)
 			buf.WriteString(":")
 			x.NestedMsgMap[k].FastMarshal(buf)
 			buf.WriteString(",")
@@ -1197,61 +1197,61 @@ func (x *Example) FastMarshal(buf *buffer.Buffer) {
 
 	if x.TestOneof != nil {
 		if _, ok := x.GetTestOneof().(*Example_OneofBol); ok {
-			buf.WriteString("\"oneofBol\"")
+			buf.WriteStringWithQuote("oneofBol")
 			buf.WriteString(":")
 			buf.WriteBool(x.GetOneofBol())
 			buf.WriteString(",")
 
 		} else if _, ok := x.GetTestOneof().(*Example_OneofStr); ok {
-			buf.WriteString("\"oneofStr\"")
+			buf.WriteStringWithQuote("oneofStr")
 			buf.WriteString(":")
-			buf.WriteString("\"" + x.GetOneofStr() + "\"")
+			buf.WriteStringWithQuote(x.GetOneofStr())
 			buf.WriteString(",")
 
 		} else if _, ok := x.GetTestOneof().(*Example_OneofIn32); ok {
-			buf.WriteString("\"oneofIn32\"")
+			buf.WriteStringWithQuote("oneofIn32")
 			buf.WriteString(":")
 			buf.WriteInt32(x.GetOneofIn32())
 			buf.WriteString(",")
 
 		} else if _, ok := x.GetTestOneof().(*Example_OneofIn64); ok {
-			buf.WriteString("\"oneofIn64\"")
+			buf.WriteStringWithQuote("oneofIn64")
 			buf.WriteString(":")
 			buf.WriteInt64(x.GetOneofIn64())
 			buf.WriteString(",")
 
 		} else if _, ok := x.GetTestOneof().(*Example_OneofUin32); ok {
-			buf.WriteString("\"oneofUin32\"")
+			buf.WriteStringWithQuote("oneofUin32")
 			buf.WriteString(":")
 			buf.WriteUint32(x.GetOneofUin32())
 			buf.WriteString(",")
 
 		} else if _, ok := x.GetTestOneof().(*Example_OneofUin64); ok {
-			buf.WriteString("\"oneofUin64\"")
+			buf.WriteStringWithQuote("oneofUin64")
 			buf.WriteString(":")
 			buf.WriteUint64(x.GetOneofUin64())
 			buf.WriteString(",")
 
 		} else if _, ok := x.GetTestOneof().(*Example_OneofFlt32); ok {
-			buf.WriteString("\"oneofFlt32\"")
+			buf.WriteStringWithQuote("oneofFlt32")
 			buf.WriteString(":")
 			buf.WriteFloat32(x.GetOneofFlt32())
 			buf.WriteString(",")
 
 		} else if _, ok := x.GetTestOneof().(*Example_OneofFlt64); ok {
-			buf.WriteString("\"oneofFlt64\"")
+			buf.WriteStringWithQuote("oneofFlt64")
 			buf.WriteString(":")
 			buf.WriteFloat64(x.GetOneofFlt64())
 			buf.WriteString(",")
 
 		} else if _, ok := x.GetTestOneof().(*Example_OneofByts); ok {
-			buf.WriteString("\"oneofByts\"")
+			buf.WriteStringWithQuote("oneofByts")
 			buf.WriteString(":")
 			buf.WriteBytes(x.GetOneofByts())
 			buf.WriteString(",")
 
 		} else if _, ok := x.GetTestOneof().(*Example_OneofMsg); ok {
-			buf.WriteString("\"oneofMsg\"")
+			buf.WriteStringWithQuote("oneofMsg")
 			buf.WriteString(":")
 			x.GetOneofMsg().FastMarshal(buf)
 			buf.WriteString(",")
@@ -1913,9 +1913,9 @@ func (x *Example_NestedMsg) FastMarshal(buf *buffer.Buffer) {
 	}
 	buf.WriteString("{")
 	if !x.IsEmptyStr() {
-		buf.WriteString("\"str\"")
+		buf.WriteStringWithQuote("str")
 		buf.WriteString(":")
-		buf.WriteString("\"" + x.GetStr() + "\"")
+		buf.WriteStringWithQuote(x.GetStr())
 		buf.WriteString(",")
 	}
 

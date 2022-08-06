@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/jsf/protoc-gen-fastjsonpb/x/jsonparser"
+	"github.com/superjsf2010/protoc-gen-fastjsonpb/x/jsonparser"
 )
 
 func main() {

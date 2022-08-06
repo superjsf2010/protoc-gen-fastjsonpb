@@ -120,24 +120,69 @@ func (p *Parser) getToken() {
 }
 
 func (p *Parser) getString() {
+	findEscape, l := p.check()
+	if findEscape {
+		p.token.raw = make([]byte, 0, 2*l)
+	}
 	i := p.off
 Switch:
 	for ; i < len(p.data); i++ {
 		switch p.data[i] {
 		case '\\':
-			// TODO 转码
 			i++
-			p.escape()
+			p.escape(&i)
+			break
 		case '"':
 			break Switch
+		default:
+			if findEscape {
+				p.token.raw = append(p.token.raw, p.data[i])
+			}
 		}
 	}
-	p.token.raw = p.data[p.off:i]
+	if !findEscape {
+		p.token.raw = p.data[p.off:i]
+	}
 	// 跳过"
 	p.off = i + 1
 }
 
-func (p *Parser) escape() {
+func (p *Parser) check() (bool, int) {
+	findEscape := false
+	i := p.off
+	l := 0
+Switch:
+	for ; i < len(p.data); i, l = i+1, l+1 {
+		switch p.data[i] {
+		case '\\':
+			findEscape = true
+			i++
+		case '"':
+			break Switch
+		}
+	}
+	return findEscape, l
+}
+
+func (p *Parser) escape(off *int) {
+	switch p.data[*off] {
+	case '"', '\\', '/', '\'':
+		p.token.raw = append(p.token.raw, p.data[*off])
+	case 'f':
+		p.token.raw = append(p.token.raw, '\f')
+	case 't':
+		p.token.raw = append(p.token.raw, '\t')
+	case 'b':
+		p.token.raw = append(p.token.raw, '\b')
+	case 'r':
+		p.token.raw = append(p.token.raw, '\r')
+	case 'n':
+		p.token.raw = append(p.token.raw, '\n')
+	case 'u':
+		// TODO unicode
+	default:
+		p.syntaxErr()
+	}
 }
 
 func (p *Parser) getTrue() {

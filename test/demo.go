@@ -4,12 +4,14 @@ import (
 	"fmt"
 
 	"github.com/superjsf2010/protoc-gen-fastjsonpb/encoding/json"
+	//"encoding/json"
+
 	"github.com/superjsf2010/protoc-gen-fastjsonpb/test/example"
 )
 
 func main() {
 	bol := false
-	str := "string"
+	str := `st"ring`
 	var in32 int32 = 32
 	var in64 int64 = 64
 	var uin32 uint32 = 32
@@ -49,8 +51,7 @@ func main() {
 	fmt.Println(string(ret1))
 	fmt.Println(err)
 
-	var byts1 []byte = []byte(`{"str":"string","in32":32,"in64":64,"uin32":32,"uin64":64,"flt32":32.123,"flt64":64.123,"byts":"Ynl0ZXM=","typ":"TYPB","msg":{"str":"string"},"strArr":["string"],"typArr":["TYPA","TYPB"],"stringMap":{"key1":"val1","key2":"val2"},"nestedTyp":"TYPB","nestedMsg":{"str":"string"},"oneofBol":false,"unknown":{"str":"string","in32":32,"in64":64,"uin32":32,"uin64":64,"flt32":32.123,"flt64":64.123,"byts":"Ynl0ZXM="}}`)
 	var e2 *example.Example = &example.Example{}
-	json.Unmarshal(byts1, e2)
+	json.Unmarshal(ret1, e2)
 	fmt.Println(e2)
 }

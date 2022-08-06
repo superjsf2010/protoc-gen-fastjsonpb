@@ -12,7 +12,7 @@ import (
 
 var msg *example.Msg = &example.Msg{
 	Bol:   true,
-	Str:   "string",
+	Str:   "st\"ring",
 	In32:  32,
 	In64:  64,
 	Uin32: 32,
@@ -24,7 +24,7 @@ var msg *example.Msg = &example.Msg{
 
 var e *example.Example = &example.Example{
 	Bol:       true,
-	Str:       "string",
+	Str:       "s\"tring",
 	In32:      32,
 	In64:      64,
 	Uin32:     32,
