@@ -5,6 +5,7 @@ import (
 
 	json "encoding/json"
 
+	jsoniter "github.com/json-iterator/go"
 	fastjsonpb "github.com/superjsf2010/protoc-gen-fastjsonpb/encoding/json"
 	"github.com/superjsf2010/protoc-gen-fastjsonpb/test/example"
 	jsonpb "google.golang.org/protobuf/encoding/protojson"
@@ -35,5 +36,13 @@ func BenchmarkStdJsonUnmarshal(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		e := &example.Example{}
 		json.Unmarshal(byts, e)
+	}
+}
+
+func BenchmarkJsoniterUnmarshal(b *testing.B) {
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		e := &example.Example{}
+		jsoniter.Unmarshal(byts, e)
 	}
 }

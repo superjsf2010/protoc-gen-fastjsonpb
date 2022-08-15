@@ -7,4 +7,4 @@
 #!/bin/bash
 rm -rf output
 mkdir -p output/bin
-go build -o ./output/bin/protoc-gen-fastjson
+go build -o ./output/bin/protoc-gen-fastjsonpb

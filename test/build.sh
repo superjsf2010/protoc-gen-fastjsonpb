@@ -28,7 +28,7 @@ compile_proto_list=( \
 for var in ${compile_proto_list[@]};
 do
     $PROTOC --go_out=$HOME_DIR \
-        --fastjson_out=$HOME_DIR \
+        --fastjsonpb_out=$HOME_DIR \
         --proto_path=$HOME_DIR/test \
         $HOME_DIR/test/$var
 done
