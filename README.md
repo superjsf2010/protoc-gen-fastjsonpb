@@ -20,7 +20,7 @@ $PROTOC --go_out=$OUTPUT_DIR \
       $PROTO_DIR/$var
 ```
 
-- **go_out fastjsonpb** 输出目录要保持一致
+- **go_out fastjsonpb__out** 输出目录要保持一致
 
 ### 调用
 
@@ -69,7 +69,7 @@ cpu: Intel(R) Xeon(R) CPU E5-26xx v4
 | FastJsonpb Unmarshal | 3523 ns/op | 464 B/op | 7 allocs/op |
 | StdJsonpb Unmarshal | 19182 ns/op | 2864 B/op | 101 allocs/op |
 | StdJson Unmarshal | 10249 ns/op | 1416 B/op | 18 allocs/op |
-| JsoniterUnmarshal | 3354 ns/op | 1672 B/op | 30 allocs/op |
+| Jsoniter Unmarshal | 3354 ns/op | 1672 B/op | 30 allocs/op |
 
 #### 备注
 
